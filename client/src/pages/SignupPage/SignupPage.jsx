@@ -1,18 +1,62 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import "./SignupPage.scss";
 
 const SignupPage = () => {
-  const [name, setName] = useState(null);
-  const [email, setEmail] = useState(null);
-  const [password, setPassword] = useState(null);
+  const navigate = useNavigate();
   const [error, setError] = useState(null);
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+  const [input, setInput] = useState({
+    name: "",
+    email: "",
+    type: "student",
+    password: "",
+    confirm_password: "",
+  });
 
-  const handleSubmit = (event) => {
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
+  const toggleConfirmPasswordVisibility = () => {
+    setConfirmPasswordVisible(!confirmPasswordVisible);
+  };
+
+  const handleChange = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
+
+    setInput((values) => ({
+      ...values,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(name, email, password);
+    console.log(input);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5555/api/adduser",
+        input
+      );
+      if (response.data.message === "registered") {
+        alert("Successfully registered. Being redirected to login page.");
+        navigate("/signin");
+      } else {
+        setError(response.data.message);
+      }
+    } catch (error) {
+      console.log("The error is: ", error);
+      setError(error.response?.data?.message || "An error occurred.");
+    }
   };
 
   return (
     <div className="signup">
+      <h1>Signup</h1>
       <div className="signup-card">
         <form onSubmit={handleSubmit}>
           <div className="signup-items">
@@ -22,10 +66,8 @@ const SignupPage = () => {
               id="name"
               name="name"
               placeholder="First Name + Last Name"
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-              }}
+              value={input.name}
+              onChange={handleChange}
             />
           </div>
           <div className="signup-items">
@@ -35,34 +77,43 @@ const SignupPage = () => {
               id="email"
               name="email"
               placeholder="...@gmail.com"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
+              value={input.email}
+              onChange={handleChange}
             />
           </div>
           <div className="signup-items">
-            <label htmlFor="password"> PASSWORD: </label>
+            <div className="label">
+              <label htmlFor="password"> PASSWORD: </label>
+              <button type="button" onClick={togglePasswordVisibility}>
+                {passwordVisible ? "Hide" : "Show"}
+              </button>
+            </div>
             <input
-              type="password"
+              type={passwordVisible ? "text" : "password"}
               id="password"
               name="password"
               placeholder=""
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
+              value={input.password}
+              onChange={handleChange}
             />
           </div>
           <div className="signup-items">
-            <label htmlFor="confirmPassword"> CONFIRM PASSWORD: </label>
+            <div className="label">
+              <label htmlFor="confirmPassword"> CONFIRM PASSWORD: </label>
+              <button type="button" onClick={toggleConfirmPasswordVisibility}>
+                {confirmPasswordVisible ? "Hide" : "Show"}
+              </button>
+            </div>
             <input
-              type="password"
+              type={confirmPasswordVisible ? "text" : "password"}
               id="confirmPassword"
-              name="confirmPassword"
+              name="confirm_password"
               placeholder="Must be identical with password!"
+              value={input.confirm_password}
+              onChange={handleChange}
             />
           </div>
+          <div className="error">{error}</div>
           <button type="submit">Sign Up</button>
         </form>
       </div>
