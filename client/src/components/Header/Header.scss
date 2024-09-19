@@ -1,0 +1,34 @@
+.header {
+  margin: 0px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 1%;
+
+  .links {
+    display: flex;
+    flex-direction: row;
+    gap: 10%;
+    margin-top: 1%;
+
+    a {
+      text-decoration: none;
+      color: #003366;
+    }
+  }
+
+  .profile {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+
+    .profile-name {
+      padding: 5%;
+      background-color: lightblue;
+      color: #003366;
+      font-weight: bold;
+      font-size: large;
+      cursor: pointer;
+    }
+  }
+}
