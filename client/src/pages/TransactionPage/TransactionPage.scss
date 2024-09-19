@@ -1,0 +1,26 @@
+.transactionPage {
+  .history {
+    background-color: #f5f5dc;
+    -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+    box-shadow: 2px 4px 10px 1px rgba(210, 210, 210, 0.47);
+    padding: 2%;
+    margin: 2%;
+
+    .title {
+      color: lightblue;
+    }
+
+    .addTransaction {
+      display: flex;
+      justify-content: center;
+      margin: 5%;
+
+      .add {
+        background-color: lightblue;
+        padding: 2% 7%;
+        font-weight: bold;
+        color: #003366;
+      }
+    }
+  }
+}

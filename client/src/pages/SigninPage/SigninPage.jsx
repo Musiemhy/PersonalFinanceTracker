@@ -29,7 +29,6 @@ const SigninPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError(null);
-    console.log(input);
 
     try {
       const response = await axios.post(

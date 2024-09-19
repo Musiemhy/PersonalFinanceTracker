@@ -1,11 +1,19 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./Header.scss";
 import Profile from "../Dropdown/Profile";
 
 const Header = () => {
+  const navigate = useNavigate();
   const name = localStorage.getItem("userName");
+  const isloggedin = localStorage.getItem("loggedIn") === "true";
   const [isClicked, setIsClicked] = useState(false);
+
+  useEffect(() => {
+    if (!isloggedin) {
+      navigate("/signin");
+    }
+  }, [isloggedin, navigate]);
 
   const toggleClick = () => {
     setIsClicked(!isClicked);

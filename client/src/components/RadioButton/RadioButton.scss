@@ -1,0 +1,32 @@
+.radioBtns {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  .radioBtn {
+    padding: 8px 16px;
+    font-size: medium !important;
+    font-family: sans-serif;
+    background: #003366;
+    cursor: pointer;
+    transition: background 0.1s;
+    font-weight: normal !important;
+    color: #f5f5dc !important;
+  }
+
+  &:not(:last-of-type) {
+    border-right: 1px solid #000c19;
+  }
+
+  input[type="radio"] {
+    display: none;
+  }
+
+  .type:checked + .radioBtn {
+    background: #000c19;
+  }
+  .category:checked + .radioBtn {
+    background: #000c19;
+  }
+}
