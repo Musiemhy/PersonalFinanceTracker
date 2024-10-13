@@ -1,0 +1,28 @@
+.budgetPage {
+  .error {
+    .errors {
+      text-align: center;
+      font-size: larger;
+      font-weight: bolder;
+      color: red;
+      margin: 10%;
+    }
+    .new {
+      margin: 0 35%;
+      background-color: lightblue;
+      padding: 2% 7%;
+      font-weight: bold;
+      color: #003366;
+    }
+  }
+  .budgetComponent {
+    text-align: center;
+
+    p {
+      font-size: larger;
+      font-weight: bolder;
+      color: red;
+      margin: 3%;
+    }
+  }
+}

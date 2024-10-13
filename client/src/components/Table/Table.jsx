@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Table.scss";
-import Modal from "../TransactionForm/Modal";
-import Form from "../TransactionForm/Form";
+import Modal from "../Form/Modal";
+import Form from "../Form/Form";
 import axios from "axios";
 import { DataGrid } from "@mui/x-data-grid";
 import { format } from "date-fns";
@@ -53,8 +53,8 @@ const Table = ({ refresh }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [modalType, setModalType] = useState("");
   const [currentTransaction, setCurrentTransaction] = useState(null);
-  const [refreshData, setRefreshData] = useState(false); // State for triggering refresh
-  const [key, setKey] = useState(0); // Unique key to force DataGrid re-render
+  const [refreshData, setRefreshData] = useState(false);
+  const [key, setKey] = useState(0);
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -99,7 +99,7 @@ const Table = ({ refresh }) => {
     };
 
     fetchTransactions();
-  }, [refresh, refreshData]); // Refresh when either 'refresh' or 'refreshData' changes
+  }, [refresh, refreshData]);
 
   const openModal = (type, transaction) => {
     setModalType(type);
@@ -152,12 +152,10 @@ const Table = ({ refresh }) => {
         params: { transactionId },
       });
 
-      // Filter out the deleted transaction and update the rows
       setRows((prevRows) =>
         prevRows.filter((transaction) => transaction.id !== transactionId)
       );
 
-      // Increment the key to force re-render of DataGrid
       setKey((prevKey) => prevKey + 1);
 
       closeModal();
@@ -172,7 +170,7 @@ const Table = ({ refresh }) => {
         <p className="errors">{error}</p>
       ) : (
         <DataGrid
-          key={key} // Unique key to force re-render after deletion
+          key={key}
           rows={rows}
           columns={columns(handleEdit, handleDelete)}
           pageSize={9}

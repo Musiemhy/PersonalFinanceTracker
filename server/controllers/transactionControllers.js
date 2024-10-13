@@ -1,25 +1,23 @@
-import { Transaction } from "../models/transactionModels.js";
+import { createTransaction, Transaction } from "../models/transactionModels.js";
 import mongoose from "mongoose";
 
 export const addTransaction = async (request, response) => {
   try {
-    const { User, type, category, amount, reason, date } = request.body;
+    const { User, type, category, reason, date } = request.body;
 
-    if (!User || !type || !category || !amount || !reason) {
+    if (!User || !type || category.length === 0 || !reason) {
       return response
         .status(400)
         .send({ message: "Please fill all required fields!" });
     }
 
-    const newTransaction = {
+    const transaction = await createTransaction(
       User,
       type,
       category,
-      amount,
       reason,
-      date,
-    };
-    const transaction = await Transaction.create(newTransaction);
+      date
+    );
 
     if (!transaction) {
       return res.status(404).send({
@@ -61,7 +59,7 @@ export const getTransactionByUser = async (req, res) => {
 
 export const updateTransaction = async (req, res) => {
   try {
-    const { id, User, type, category, amount, date, reason } = req.body;
+    const { id, User, type, category, date, reason } = req.body;
 
     const updatedTransaction = await Transaction.findByIdAndUpdate(
       id,
@@ -69,7 +67,6 @@ export const updateTransaction = async (req, res) => {
         User,
         type,
         category,
-        amount,
         date,
         reason,
       },

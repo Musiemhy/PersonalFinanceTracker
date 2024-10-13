@@ -3,10 +3,10 @@ import axios from "axios";
 import "./TransactionPage.scss";
 import Header from "../../components/Header/Header";
 import Table from "../../components/Table/Table";
-import Form from "../../components/TransactionForm/Form";
-import Modal from "../../components/TransactionForm/Modal";
+import Form from "../../components/Form/Form";
+import Modal from "../../components/Form/Modal";
 
-function TransactionPage() {
+const TransactionPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [refresh, setRefresh] = useState(false);
 
@@ -49,6 +49,6 @@ function TransactionPage() {
       </div>
     </div>
   );
-}
+};
 
 export default TransactionPage;

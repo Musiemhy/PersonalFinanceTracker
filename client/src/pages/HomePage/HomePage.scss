@@ -1,0 +1,49 @@
+.homePage {
+  color: #003366;
+
+  .homeHeader {
+    background-color: lightblue;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 2% 2% 10% 2%;
+    position: relative;
+
+    .message {
+      margin-left: 2%;
+
+      .date {
+        width: 100%;
+        padding: 7% 20%;
+        margin: 3% 6%;
+        background: rgba($color: #fff, $alpha: 0.3);
+        border: none;
+      }
+    }
+  }
+
+  .cardSection {
+    position: absolute;
+    width: 100%;
+    top: 55%;
+    display: flex;
+    justify-content: space-evenly;
+
+    .cardItem {
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      background-color: #f5f5dc;
+      padding: 2% 4%;
+      flex: 1;
+      margin: 0 2%;
+      max-width: 20%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+
+      img {
+        width: 10%;
+        height: fit-content;
+      }
+    }
+  }
+}
