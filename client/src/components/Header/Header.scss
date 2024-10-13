@@ -17,6 +17,18 @@
     }
   }
 
+  .homeLinks {
+    display: flex;
+    flex-direction: row;
+    gap: 10%;
+    margin-top: 1%;
+
+    a {
+      text-decoration: none;
+      color: #003366;
+    }
+  }
+
   .profile {
     display: flex;
     flex-direction: column;
@@ -26,6 +38,14 @@
       padding: 5%;
       background-color: lightblue;
       color: #003366;
+      font-weight: bold;
+      font-size: large;
+      cursor: pointer;
+    }
+    .home-profile-name {
+      padding: 5%;
+      background-color: #003366;
+      color: #f5f5dc;
       font-weight: bold;
       font-size: large;
       cursor: pointer;

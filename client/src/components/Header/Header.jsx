@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import "./Header.scss";
 import Profile from "../Dropdown/Profile";
 
 const Header = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
   const name = localStorage.getItem("userName");
   const isloggedin = localStorage.getItem("loggedIn") === "true";
   const [isClicked, setIsClicked] = useState(false);
@@ -21,13 +23,16 @@ const Header = () => {
 
   return (
     <div className="header">
-      <div className="links">
+      <div className={isHomePage ? "homeLinks" : "links"}>
         <Link to="/">HOME</Link>
         <Link to="/transaction">TRANSACTION</Link>
         <Link to="/budget">BUDGET</Link>
       </div>
       <div className="profile">
-        <button className="profile-name" onClick={toggleClick}>
+        <button
+          className={isHomePage ? "home-profile-name" : "profile-name"}
+          onClick={toggleClick}
+        >
           {name}
         </button>
         <div
