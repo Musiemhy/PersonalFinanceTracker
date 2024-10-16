@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import CardItems from "../../components/CardItems/CardItems";
 import "./LandingPage.scss";
-import SignupPage from "../SignupPage/SignupPage";
 
 const LandingPage = () => {
   const title1 = "Student Version";
@@ -18,10 +17,12 @@ const LandingPage = () => {
 
   return (
     <div className="landing">
-      <h1 className="header">Choose Your Plan</h1>
-      <h4 className="header">Select the plan that best fits your needs.</h4>
-      <div className="cards">
-        <div className="card-items1">
+      <h1 className="headerLanding">Choose Your Plan</h1>
+      <h4 className="headerLanding">
+        Select the plan that best fits your needs.
+      </h4>
+      <div className="cardsLanding">
+        <div className="card-items1Landing">
           <Link to="/signup">
             <CardItems
               title={title1}
@@ -32,7 +33,7 @@ const LandingPage = () => {
             />
           </Link>
         </div>
-        <div className="card-items2">
+        <div className="card-items2Landing">
           <Link to="/comingsoon">
             <CardItems
               title={title2}

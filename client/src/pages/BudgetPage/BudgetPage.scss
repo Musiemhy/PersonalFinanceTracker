@@ -1,4 +1,43 @@
 .budgetPage {
+  margin-bottom: 10%;
+  color: #003366;
+
+  .headerContainer {
+    background-color: lightblue;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 2%;
+
+    .dateSelector {
+      display: flex;
+      flex-direction: column;
+
+      .dateRangeSelector {
+        position: relative;
+        display: inline-block;
+
+        .date {
+          padding: 7% 25%;
+          margin: 3% 0;
+          background: rgba($color: #fff, $alpha: 0.3);
+          border: none;
+        }
+        .dateRangeOverlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          text-align: center;
+          margin: 1.3% 2%;
+          color: #003366;
+          font-weight: 700;
+          pointer-events: none;
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+
   .error {
     .errors {
       text-align: center;
@@ -7,22 +46,72 @@
       color: red;
       margin: 10%;
     }
-    .new {
-      margin: 0 35%;
-      background-color: lightblue;
-      padding: 2% 7%;
-      font-weight: bold;
-      color: #003366;
-    }
   }
+
   .budgetComponent {
     text-align: center;
+
+    .btnContainer {
+      margin: 2%;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+
+      .new {
+        width: 100%;
+        background-color: #003366;
+        color: #f5f5dc;
+        padding: 2% 7%;
+        font-weight: bold;
+      }
+    }
 
     p {
       font-size: larger;
       font-weight: bolder;
       color: red;
       margin: 3%;
+    }
+
+    .progress {
+      .dateRangeOverlay {
+        text-align: center;
+        color: #003366;
+        pointer-events: none;
+        white-space: nowrap;
+        font-size: large;
+        font-weight: bold;
+      }
+
+      .charts {
+        display: flex;
+        flex-direction: row;
+        gap: 10%;
+        margin: 5%;
+
+        .bar {
+          flex-basis: 60%;
+          height: 400px;
+        }
+        .pie {
+          flex-basis: 20%;
+          height: 400px;
+        }
+      }
+    }
+
+    .budgetHistory {
+      margin: 5%;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      justify-content: center;
+
+      .lineChart {
+        margin: 0 auto;
+        height: 500px;
+        width: 80%;
+      }
     }
   }
 }

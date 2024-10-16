@@ -6,15 +6,19 @@ import axios from "axios";
 import BudgetForm from "../../components/Form/budgetForm";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import BarChart from "../../components/Charts/BarChart";
+import PieChart from "../../components/Charts/PieChart";
+import LineChart from "../../components/Charts/LineChart";
 
 const BudgetPage = () => {
+  const userId = localStorage.getItem("userId");
   const [error, setError] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [budgetData, setBudgetData] = useState(null);
   const [budgetHistory, setBudgetHistory] = useState(null);
   const [selectedDateRange, setSelectedDateRange] = useState([
-    new Date(),
-    new Date(),
+    new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+    new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
   ]);
 
   const openModal = () => setIsOpen(true);
@@ -37,52 +41,106 @@ const BudgetPage = () => {
       setError("Failed to save budget. Please try again.");
     }
   };
+
+  const handleDateChange = (date) => {
+    const selectedDate = new Date(date);
+
+    const startOfMonth = new Date(
+      selectedDate.getFullYear(),
+      selectedDate.getMonth(),
+      1
+    );
+    const endOfMonth = new Date(
+      selectedDate.getFullYear(),
+      selectedDate.getMonth() + 1,
+      0
+    );
+
+    setSelectedDateRange([startOfMonth, endOfMonth]);
+  };
+
+  const formatDate = (date) => {
+    date.setHours(0, 0, 0, 0);
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  };
+
   useEffect(() => {
     const fetchBudget = async () => {
-      try {
-        const response = await axios.post(
-          "http://localhost:5555/api/getbudget",
-          {
-            userId: localStorage.getItem("userId"),
-          }
-        );
+      if (userId) {
+        try {
+          const response = await axios.post(
+            "http://localhost:5555/api/getbudget",
+            {
+              userId,
+            }
+          );
 
-        if (response.data === "No Budget Yet" || response.data.length === 0) {
-          setError(response.data);
-        } else if (response.data === "Did not receive userId!") {
-          setError("Something went wrong. Please refresh!");
-        } else {
-          setBudgetData(response.data);
-          setError(null);
+          console.log(response.data);
+          if (response.data === "No Budget Yet" || response.data.length === 0) {
+            setError(response.data);
+            setBudgetHistory(null);
+          } else if (response.data === "Did not receive date range!") {
+            setError("Something went wrong. Please refresh!");
+            setBudgetHistory(null);
+          } else {
+            setBudgetHistory(response.data);
+            setError(null);
+          }
+        } catch (error) {
+          console.error("Error fetching budget:", error);
+          setError(
+            "Failed to fetch budget data. Check your network connection"
+          );
+          setBudgetHistory(null);
         }
-      } catch (error) {
-        console.error("Error fetching budget:", error);
-        setError("Failed to fetch budget data. Check your network connection");
       }
     };
 
     fetchBudget();
-  });
+  }, []);
 
   useEffect(() => {
     const fetchBudgetByDate = async () => {
-      try {
-        const response = await axios.post(
-          "http://localhost:5555/api/getbudgetbyrange",
-          { dateRange: selectedDateRange }
-        );
+      if (selectedDateRange[0] && selectedDateRange[1]) {
+        console.log({
+          dateRange: [
+            formatDate(selectedDateRange[0]),
+            formatDate(selectedDateRange[1]),
+          ],
+        });
+        try {
+          const response = await axios.post(
+            "http://localhost:5555/api/getbudgetbyrange",
+            {
+              dateRange: [
+                formatDate(selectedDateRange[0]),
+                formatDate(selectedDateRange[1]),
+              ],
+            }
+          );
 
-        if (response.data === "No Budget Yet" || response.data.length === 0) {
-          setError(response.data);
-        } else if (response.data === "Did not recieve date range!") {
-          setError("Something went wrong. Please refresh!");
-        } else {
-          setBudgetHistory(response.data);
-          setError(null);
+          if (response.data === "No Budget Yet" || response.data.length === 0) {
+            setError(response.data);
+            setBudgetData(null);
+          } else if (response.data === "Did not receive date range!") {
+            setError("Something went wrong. Please refresh!");
+            setBudgetData(null);
+          } else {
+            setBudgetData(response.data);
+            setError(null);
+          }
+        } catch (error) {
+          console.error("Error fetching budget:", error);
+          setError(
+            "Failed to fetch budget data. Check your network connection"
+          );
+          setBudgetData(null);
         }
-      } catch (error) {
-        console.error("Error fetching budget:", error);
-        setError("Failed to fetch budget data. Check your network connection");
       }
     };
 
@@ -91,75 +149,110 @@ const BudgetPage = () => {
 
   return (
     <div className="budgetPage">
-      <Header />
-      {error ? (
-        <div className="error">
-          <p className="errors">{error}</p>
-          <div>
-            <button onClick={openModal} className="new">
-              Set Next Month's Budget
-            </button>
-            <Modal open={isOpen} onClose={closeModal}>
-              <BudgetForm onSave={handleSubmit} />
-            </Modal>
-          </div>
-        </div>
-      ) : (
-        <div className="budgetComponent">
-          <div className="progress">
-            <h1>Budget for The Current Month</h1>
-            {budgetData &&
-            budgetData.categories &&
-            budgetData.categories.length > 0 ? (
-              budgetData.categories.map((category) => (
-                <div key={category.name} className="categoryProgress">
-                  <h2>{category.name}</h2>
-                  <p>Budget: {category.amount}</p>
-                </div>
-              ))
-            ) : (
-              <p>No budget set for the current month or still loading...</p>
+      <div className="headerContainer">
+        <Header />
+        <div className="dateSelector">
+          <h3>Select a month you want to view budget history of</h3>
+          <div className="dateRangeSelector">
+            <DatePicker
+              className="date"
+              onChange={handleDateChange}
+              maxDate={new Date()}
+              showMonthYearPicker
+            />
+            {selectedDateRange[0] && selectedDateRange[1] && (
+              <p className="dateRangeOverlay">
+                {selectedDateRange[0].toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "2-digit",
+                  year: "numeric",
+                })}{" "}
+                -{" "}
+                {selectedDateRange[1].toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "2-digit",
+                  year: "numeric",
+                })}
+              </p>
             )}
           </div>
-
-          <div className="history">
-            <h1>Budget History</h1>
-            <div className="dateRangeSelector">
-              <DatePicker
-                selected={selectedDateRange[0]}
-                onChange={(dates) => setSelectedDateRange(dates)}
-                startDate={selectedDateRange[0]}
-                endDate={selectedDateRange[1]}
-                selectsRange
-                inline
-              />
-            </div>
-            {/* History budget display could go here */}
-            <div className="month">
-              <div className="main"></div>
-              {budgetHistory &&
-              budgetHistory.categories &&
-              budgetHistory.categories.length > 0
-                ? budgetHistory.categories.map((category) => (
-                    <div key={category.name} className="categoryProgress">
-                      <h2>{category.name}</h2>
-                      <p>Budget: {category.amount}</p>
-                    </div>
-                  ))
-                : {
-                    // selectedDateRange.length > 0 ? (<p>No budget set for the selected month or still loading...</p>) : ( <p> Please select a range you want to view budget history of!</p>)
-                  }}
-            </div>
-          </div>
-
-          <div className="new">
-            <button onClick={openModal}>Set Next Month's Budget</button>
-            <Modal open={isOpen} onClose={closeModal}>
-              <BudgetForm onSave={handleSubmit} />
-            </Modal>
-          </div>
         </div>
-      )}
+      </div>
+      <div className="budgetComponent">
+        {error ? (
+          <div className="error">
+            <p className="errors">{error}</p>
+          </div>
+        ) : (
+          <div>
+            <div className="btnContainer">
+              <div>
+                <button onClick={openModal} className="new">
+                  Set Next Month's Budget
+                </button>
+                <Modal open={isOpen} onClose={closeModal}>
+                  <BudgetForm onSave={handleSubmit} />
+                </Modal>
+              </div>
+            </div>
+            <div className="progress">
+              <h1>
+                Budget for{" "}
+                {selectedDateRange[0] && selectedDateRange[1] && (
+                  <p className="dateRangeOverlay">
+                    {selectedDateRange[0].toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "2-digit",
+                      year: "numeric",
+                    })}{" "}
+                    -{" "}
+                    {selectedDateRange[1].toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "2-digit",
+                      year: "numeric",
+                    })}
+                  </p>
+                )}
+              </h1>
+              {budgetData &&
+              budgetData.length > 0 &&
+              budgetData[0].categories &&
+              budgetData[0].categories.length > 0 ? (
+                <div className="charts">
+                  <div className="bar">
+                    <BarChart
+                      budgetData={budgetData[0]}
+                      date={selectedDateRange}
+                    />
+                  </div>
+                  <div className="pie">
+                    <PieChart
+                      budgetData={budgetData[0]}
+                      date={selectedDateRange}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <p>No budget set for the current month</p>
+              )}
+            </div>
+            <div className="budgetHistory">
+              <h1>Monthly Budget Comparison Over Time</h1>
+              <span>
+                Track how your budget has changed across different months and
+                visualize trends in your financial planning.
+              </span>
+              {budgetHistory && budgetHistory.length > 0 ? (
+                <div className="lineChart">
+                  <LineChart budgetHistory={budgetHistory} />
+                </div>
+              ) : (
+                <p>No budget set for the current month</p>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

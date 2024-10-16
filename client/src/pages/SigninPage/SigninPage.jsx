@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import "./SigninPage.scss";
 
@@ -53,6 +53,9 @@ const SigninPage = () => {
 
   return (
     <div className="signin">
+      <Link to="/landing" className="nav">
+        Home
+      </Link>
       <h1>Signin</h1>
       <div className="signin-card">
         <form onSubmit={handleSubmit}>
@@ -86,6 +89,9 @@ const SigninPage = () => {
           <div className="error">{error}</div>
           <button type="submit">Sign In</button>
         </form>
+        <div className="redirect">
+          <Link to="/signup"> Don't have an account? Go To Signup</Link>
+        </div>
       </div>
     </div>
   );

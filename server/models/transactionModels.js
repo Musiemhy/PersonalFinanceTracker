@@ -3,20 +3,22 @@ import mongoose from "mongoose";
 const transactionSchema = new mongoose.Schema({
   User: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   type: { type: String, enum: ["income", "expense"], required: true },
-  category: {
-    name: {
-      type: String,
-      enum: [
-        "allowance",
-        "food",
-        "transportation",
-        "entertainment",
-        "necessities",
-      ],
-      required: true,
+  category: [
+    {
+      name: {
+        type: String,
+        enum: [
+          "allowance",
+          "food",
+          "transportation",
+          "entertainment",
+          "necessities",
+        ],
+        required: true,
+      },
+      amount: { type: Number, required: true },
     },
-    amount: { type: Number, required: true },
-  },
+  ],
   reason: { type: String, required: true },
   date: { type: Date, default: Date.now },
 });

@@ -5,7 +5,13 @@ export const addBudget = async (request, response) => {
   try {
     const { user, category, startDate, endDate } = request.body;
 
-    if (!user || category.length === 0 || !startDate || !endDate) {
+    if (
+      !user ||
+      !Array.isArray(category) ||
+      category.length === 0 ||
+      !startDate ||
+      !endDate
+    ) {
       return response
         .status(400)
         .send({ message: "Please fill all required fields!" });
@@ -48,19 +54,25 @@ export const getBudgetByDateRange = async (req, res) => {
   try {
     const { dateRange } = req.body;
 
-    if (!dateRange.length === 0) {
-      return res.status(400).send({ message: "Did not recieve date range!" });
+    if (!dateRange || dateRange.length !== 2) {
+      return res
+        .status(400)
+        .send({ message: "Did not receive valid date range!" });
     }
 
+    const startDate = new Date(dateRange[0]);
+    const endDate = new Date(dateRange[1]);
+
     const budget = await Budget.find({
-      startDate: dateRange[0],
-      endDate: dateRange[1],
+      $or: [
+        { startDate: { $gte: startDate, $lte: endDate } },
+        { endDate: { $gte: startDate, $lte: endDate } },
+        { startDate: { $lte: startDate }, endDate: { $gte: endDate } },
+      ],
     });
 
-    if (!budget) {
-      return res.status(404).send({
-        message: "No Budget Yet",
-      });
+    if (!budget || budget.length === 0) {
+      return res.status(404).send({ message: "No Budget Yet" });
     }
 
     return res.status(200).json(budget);

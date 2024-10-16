@@ -6,8 +6,8 @@ import Profile from "../Dropdown/Profile";
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const isHomePage = location.pathname === "/";
   const name = localStorage.getItem("userName");
+  const isHomePage = location.pathname === "/";
   const isloggedin = localStorage.getItem("loggedIn") === "true";
   const [isClicked, setIsClicked] = useState(false);
 
@@ -22,8 +22,8 @@ const Header = () => {
   };
 
   return (
-    <div className="header">
-      <div className={isHomePage ? "homeLinks" : "links"}>
+    <div className={isHomePage ? "home" : "header"}>
+      <div className={isHomePage ? "home-links" : "links"}>
         <Link to="/">HOME</Link>
         <Link to="/transaction">TRANSACTION</Link>
         <Link to="/budget">BUDGET</Link>

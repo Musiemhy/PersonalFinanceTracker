@@ -3,7 +3,7 @@ import "./CardItems.scss";
 
 const CardItems = ({ title, cardNumber, icon, text, description }) => {
   return (
-    <div className="card" id={`card${cardNumber}`}>
+    <div className="cardLanding" id={`card${cardNumber}Landing`}>
       <h1 className="title">{title}</h1>
       <div className="circle">
         <p className="circle-text">{cardNumber}</p>

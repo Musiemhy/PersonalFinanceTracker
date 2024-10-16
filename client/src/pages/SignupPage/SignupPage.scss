@@ -4,6 +4,16 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
+  color: #003366;
+  margin: 5%;
+
+  .nav {
+    align-self: flex-end;
+    text-decoration: none;
+    font-size: large;
+    font-weight: bold;
+    margin-right: 5%;
+  }
 
   h1 {
     text-align: center;
@@ -56,9 +66,23 @@
         width: 100%;
         padding: 5%;
         margin: 0px;
-        background-color: #f5f5dc;
+        background-color: #003366;
+        color: #f5f5dc;
         font-weight: bold;
         font-size: large;
+      }
+    }
+    .redirect {
+      margin: 10% 0;
+      align-items: center;
+
+      a {
+        font-weight: bold;
+        font-size: large;
+        color: #003366;
+        text-decoration: underline;
+        font-size: 0.9rem;
+        margin-bottom: 2%;
       }
     }
   }

@@ -7,6 +7,13 @@
   background-color: #f5f5dc;
 }
 
+.nav {
+  align-self: flex-end;
+  text-decoration: none;
+  font-size: large;
+  font-weight: bold;
+  margin-right: 5%;
+}
 /* From Uiverse.io by Spacious74 */
 .outer {
   width: 50%;

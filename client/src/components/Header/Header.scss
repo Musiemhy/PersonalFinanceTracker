@@ -3,21 +3,10 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin: 1%;
+  background-color: lightblue;
+  padding: 2% 2% 2% 2%;
 
   .links {
-    display: flex;
-    flex-direction: row;
-    gap: 10%;
-    margin-top: 1%;
-
-    a {
-      text-decoration: none;
-      color: #003366;
-    }
-  }
-
-  .homeLinks {
     display: flex;
     flex-direction: row;
     gap: 10%;
@@ -35,14 +24,7 @@
     justify-content: stretch;
 
     .profile-name {
-      padding: 5%;
-      background-color: lightblue;
-      color: #003366;
-      font-weight: bold;
-      font-size: large;
-      cursor: pointer;
-    }
-    .home-profile-name {
+      width: max-content;
       padding: 5%;
       background-color: #003366;
       color: #f5f5dc;
@@ -50,5 +32,33 @@
       font-size: large;
       cursor: pointer;
     }
+  }
+}
+.home {
+  margin: 0px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: lightblue;
+
+  .home-links {
+    display: flex;
+    flex-direction: row;
+    gap: 10%;
+    margin-top: 1%;
+
+    a {
+      text-decoration: none;
+      color: #003366;
+    }
+  }
+
+  .home-profile-name {
+    padding: 5%;
+    background-color: #003366;
+    color: #f5f5dc;
+    font-weight: bold;
+    font-size: large;
+    cursor: pointer;
   }
 }

@@ -75,8 +75,16 @@ const Table = ({ refresh }) => {
         } else {
           setRows(
             response.data.map((transaction, index) => {
-              const amount =
-                transaction.amount === "N/A" ? 0 : Number(transaction.amount);
+              // Handle multiple categories (combine names and amounts into a string)
+              const categoryNames = transaction.category
+                .map((cat) => cat.name)
+                .join(", ");
+              const totalAmount = transaction.category.reduce(
+                (total, cat) => total + (cat.amount || 0),
+                0
+              );
+
+              // Format date
               const formattedDate = transaction.date
                 ? format(new Date(transaction.date), "MM/dd/yyyy")
                 : "Invalid date";
@@ -85,8 +93,8 @@ const Table = ({ refresh }) => {
                 id: transaction._id,
                 idNum: index + 1,
                 type: transaction.type,
-                category: transaction.category,
-                amount: amount,
+                category: categoryNames, // Concatenated category names
+                amount: totalAmount, // Sum of all category amounts
                 transactionDate: formattedDate,
                 reason: transaction.reason,
               };
