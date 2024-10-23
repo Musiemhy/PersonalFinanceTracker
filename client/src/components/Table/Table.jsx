@@ -59,7 +59,7 @@ const Table = ({ refresh }) => {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const userId = localStorage.getItem("userId");
+        const userId = sessionStorage.getItem("userId");
         const response = await axios.post(
           "http://localhost:5555/api/gettransaction",
           { userId }

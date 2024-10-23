@@ -5,7 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import RadioButton from "../RadioButton/RadioButton";
 
 const Form = ({ initialData, onSave }) => {
-  const userId = localStorage.getItem("userId");
+  const userId = sessionStorage.getItem("userId");
   const [error, setError] = useState(null);
 
   const [input, setInput] = useState({

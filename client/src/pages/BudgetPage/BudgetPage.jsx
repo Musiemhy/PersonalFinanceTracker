@@ -9,9 +9,10 @@ import "react-datepicker/dist/react-datepicker.css";
 import BarChart from "../../components/Charts/BarChart";
 import PieChart from "../../components/Charts/PieChart";
 import LineChart from "../../components/Charts/LineChart";
+import { toast } from "react-toastify";
 
 const BudgetPage = () => {
-  const userId = localStorage.getItem("userId");
+  const userId = sessionStorage.getItem("userId");
   const [error, setError] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [budgetData, setBudgetData] = useState(null);
@@ -32,7 +33,7 @@ const BudgetPage = () => {
       );
 
       if (response.status === 201) {
-        alert("Budget saved successfully!");
+        toast.success("Budget saved successfully!");
         closeModal();
         fetchBudget();
       }
@@ -80,7 +81,6 @@ const BudgetPage = () => {
             }
           );
 
-          console.log(response.data);
           if (response.data === "No Budget Yet" || response.data.length === 0) {
             setError(response.data);
             setBudgetHistory(null);
@@ -107,12 +107,6 @@ const BudgetPage = () => {
   useEffect(() => {
     const fetchBudgetByDate = async () => {
       if (selectedDateRange[0] && selectedDateRange[1]) {
-        console.log({
-          dateRange: [
-            formatDate(selectedDateRange[0]),
-            formatDate(selectedDateRange[1]),
-          ],
-        });
         try {
           const response = await axios.post(
             "http://localhost:5555/api/getbudgetbyrange",

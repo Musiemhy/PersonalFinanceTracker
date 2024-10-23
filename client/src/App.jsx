@@ -7,10 +7,13 @@ import SignupPage from "./pages/SignupPage/SignupPage";
 import SigninPage from "./pages/SigninPage/SigninPage";
 import LandingPage from "./pages/LandingPage/LandingPage";
 import ComingsoonPage from "./pages/ComingsoonPage/ComingsoonPage";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
     <Router>
+      <ToastContainer />
       <Routes>
         <Route path="/comingsoon" element={<ComingsoonPage />} />
         <Route path="/landing" element={<LandingPage />} />

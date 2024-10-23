@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import "./SigninPage.scss";
+import { toast } from "react-toastify";
 
 const SigninPage = () => {
   const navigate = useNavigate();
@@ -37,10 +38,10 @@ const SigninPage = () => {
       );
 
       if (response.data) {
-        localStorage.setItem("userId", response.data._id);
-        localStorage.setItem("userName", response.data.name);
-        localStorage.setItem("loggedIn", true);
-        alert("Successfully logged in. Redirecting to the homepage.");
+        sessionStorage.setItem("userId", response.data._id);
+        sessionStorage.setItem("userName", response.data.name);
+        sessionStorage.setItem("loggedIn", true);
+        toast.success("Successfully logged in. Redirecting to the homepage.");
         navigate("/");
       } else {
         setError(response.data.message);

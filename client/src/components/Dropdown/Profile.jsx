@@ -1,15 +1,15 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./Profile.scss";
+import { toast } from "react-toastify";
 
 const Profile = () => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    localStorage.setItem("userId", null);
-    localStorage.setItem("userName", null);
-    localStorage.setItem("loggedIn", false);
+    sessionStorage.clear();
     navigate("/signin");
+    toast.success("Successfully logged out.");
   };
 
   return (

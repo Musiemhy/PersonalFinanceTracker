@@ -8,8 +8,8 @@ import BarChart from "../../components/Charts/BarChart";
 import PieChart from "../../components/Charts/PieChart";
 
 const HomePage = () => {
-  const name = localStorage.getItem("name");
-  const userId = localStorage.getItem("userId");
+  const name = sessionStorage.getItem("name");
+  const userId = sessionStorage.getItem("userId");
   const [selectedDateRange, setSelectedDateRange] = useState([
     new Date(new Date().getFullYear(), new Date().getMonth(), 1),
     new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
@@ -17,6 +17,9 @@ const HomePage = () => {
   const [error, setError] = useState(null);
   const [budgetData, setBudgetData] = useState(null);
   const [transactionHistory, setTransactionHistory] = useState(null);
+  const [totalExpense, setTotalExpense] = useState(null);
+  const [totalIncome, setTotalIncome] = useState(null);
+  const [remaining, setRemaining] = useState(null);
 
   const handleDateChange = (date) => {
     const selectedDate = new Date(date);
@@ -78,12 +81,6 @@ const HomePage = () => {
   useEffect(() => {
     const fetchBudgetByDate = async () => {
       if (selectedDateRange[0] && selectedDateRange[1]) {
-        console.log({
-          dateRange: [
-            formatDate(selectedDateRange[0]),
-            formatDate(selectedDateRange[1]),
-          ],
-        });
         try {
           const response = await axios.post(
             "http://localhost:5555/api/getbudgetbyrange",
@@ -117,6 +114,45 @@ const HomePage = () => {
 
     fetchBudgetByDate();
   }, [selectedDateRange]);
+
+  useEffect(() => {
+    const calculateData = () => {
+      if (transactionHistory && transactionHistory.length > 0) {
+        const filteredExpenses = transactionHistory.filter((transaction) => {
+          const transactionDate = new Date(transaction.date);
+          return (
+            transaction.type === "expense" &&
+            transactionDate >= selectedDateRange[0] &&
+            transactionDate <= selectedDateRange[1]
+          );
+        });
+
+        const totalExpenses = filteredExpenses.reduce((acc, transaction) => {
+          return (
+            acc + transaction.category.reduce((sum, cat) => sum + cat.amount, 0)
+          );
+        }, 0);
+
+        setTotalExpense(totalExpenses);
+      }
+
+      if (budgetData && budgetData.length > 0) {
+        const totalBudget = budgetData[0].categories.reduce((acc, category) => {
+          return acc + category.amount;
+        }, 0);
+
+        setTotalIncome(totalBudget);
+      }
+    };
+
+    calculateData();
+  }, [transactionHistory, budgetData, selectedDateRange]);
+
+  useEffect(() => {
+    if (totalIncome !== null && totalExpense !== null) {
+      setRemaining(totalIncome - totalExpense);
+    }
+  }, [totalIncome, totalExpense]);
 
   return (
     <div className="homePage">
@@ -152,61 +188,65 @@ const HomePage = () => {
           </div>
         </div>
       </div>
-
-      <div className="cardSection">
-        <div className="cardItem">
-          <div className="texts">
-            <h3>Remaining</h3>
-            <h3>{} ETB.</h3>
-            <p>{}% from last period</p>
-          </div>
-          <img src="/piggy-bank.svg" alt="icon" />
+      {error ? (
+        <div className="error">
+          <p className="errors">{error}</p>
         </div>
-        <div className="cardItem">
-          <div className="texts">
-            <h3>Income</h3>
-            <h3>{} ETB.</h3>
-            <p>{}% from last period</p>
-          </div>
-          <img src="/growth.png" alt="icon" />
-        </div>
-        <div className="cardItem">
-          <div className="texts">
-            <h3>Expenses</h3>
-            <h3>{} ETB.</h3>
-            <p>{}% from last period</p>
-          </div>
-          <img src="/icons8-decrease-48.png" alt="icon" />
-        </div>
-      </div>
-
-      <div className="progress">
-        {budgetData &&
-        budgetData.length > 0 &&
-        budgetData[0].categories &&
-        budgetData[0].categories.length > 0 &&
-        transactionHistory &&
-        transactionHistory.length > 0 ? (
-          <div className="charts">
-            <div className="bar">
-              <BarChart
-                budgetData={budgetData[0]}
-                expenseData={transactionHistory}
-                date={selectedDateRange}
-              />
+      ) : (
+        <>
+          <div className="cardSection">
+            <div className="cardItem">
+              <div className="texts">
+                <h3>Remaining</h3>
+                <h3> {remaining} ETB.</h3>
+              </div>
+              <img src="/piggy-bank.svg" alt="icon" />
             </div>
-            <div className="pie">
-              <PieChart
-                budgetData={budgetData[0]}
-                expenseData={transactionHistory}
-                date={selectedDateRange}
-              />
+            <div className="cardItem">
+              <div className="texts">
+                <h3>Income</h3>
+                <h3> {totalIncome} ETB.</h3>
+              </div>
+              <img src="/growth.png" alt="icon" />
+            </div>
+            <div className="cardItem">
+              <div className="texts">
+                <h3>Expenses</h3>
+                <h3> {totalExpense} ETB.</h3>
+              </div>
+              <img src="/icons8-decrease-48.png" alt="icon" />
             </div>
           </div>
-        ) : (
-          <p>No budget set for the current month</p>
-        )}
-      </div>
+
+          <div className="progress">
+            {budgetData &&
+            budgetData.length > 0 &&
+            budgetData[0].categories &&
+            budgetData[0].categories.length > 0 &&
+            transactionHistory &&
+            transactionHistory.length > 0 ? (
+              <div className="charts">
+                <div className="bar">
+                  <BarChart
+                    budgetData={budgetData[0]}
+                    expenseData={transactionHistory}
+                    date={selectedDateRange}
+                  />
+                </div>
+                <div className="pie">
+                  <PieChart
+                    budgetData={budgetData[0]}
+                    expenseData={transactionHistory}
+                    date={selectedDateRange}
+                  />
+                </div>
+              </div>
+            ) : (
+              <p>No budget set for the current month</p>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 };

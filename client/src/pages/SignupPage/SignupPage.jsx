@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import "./SignupPage.scss";
+import { toast } from "react-toastify";
 
 const SignupPage = () => {
   const navigate = useNavigate();
@@ -35,7 +36,6 @@ const SignupPage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(input);
 
     try {
       const response = await axios.post(
@@ -43,7 +43,9 @@ const SignupPage = () => {
         input
       );
       if (response.data.message === "registered") {
-        alert("Successfully registered. Being redirected to login page.");
+        toast.success(
+          "Successfully registered. Being redirected to login page."
+        );
         navigate("/signin");
       } else {
         setError(response.data.message);

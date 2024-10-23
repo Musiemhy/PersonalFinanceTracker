@@ -5,6 +5,7 @@ import Header from "../../components/Header/Header";
 import Table from "../../components/Table/Table";
 import Form from "../../components/Form/Form";
 import Modal from "../../components/Form/Modal";
+import { toast } from "react-toastify";
 
 const TransactionPage = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,7 +22,7 @@ const TransactionPage = () => {
       );
 
       if (response.data) {
-        alert("Transaction added successfully.");
+        toast.success("Transaction added successfully.");
         closeModal();
         setRefresh((prev) => !prev);
       } else {

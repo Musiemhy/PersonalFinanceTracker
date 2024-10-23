@@ -6,9 +6,9 @@ import Profile from "../Dropdown/Profile";
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const name = localStorage.getItem("userName");
+  const name = sessionStorage.getItem("userName");
   const isHomePage = location.pathname === "/";
-  const isloggedin = localStorage.getItem("loggedIn") === "true";
+  const isloggedin = sessionStorage.getItem("loggedIn") === "true";
   const [isClicked, setIsClicked] = useState(false);
 
   useEffect(() => {

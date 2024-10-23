@@ -58,7 +58,7 @@ const BudgetForm = ({ initialData, onSave }) => {
     }
 
     const input = {
-      user: localStorage.getItem("userId"),
+      user: sessionStorage.getItem("userId"),
       category: [
         { name: "food", amount: Number(foodAmount) },
         { name: "transportation", amount: Number(transportationAmount) },
